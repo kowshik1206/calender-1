@@ -57,7 +57,7 @@ const Modal = React.memo<ModalProps>(({ isOpen, onClose, title, children, size =
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
@@ -66,18 +66,18 @@ const Modal = React.memo<ModalProps>(({ isOpen, onClose, title, children, size =
       <div
         ref={modalRef}
         className={clsx(
-          'bg-white rounded-lg shadow-xl w-full',
-          sizeStyles[size],
+          'bg-white rounded-2xl shadow-2xl w-full border border-neutral-100 animate-slideUp',
+          sizeStyles[size as keyof typeof sizeStyles],
           'max-h-[90vh] overflow-y-auto'
         )}
       >
-        <div className="sticky top-0 bg-white border-b border-neutral-200 px-6 py-4 flex items-center justify-between">
-          <h2 id="modal-title" className="text-xl font-semibold text-neutral-900">
+        <div className="sticky top-0 bg-gradient-to-r from-white via-neutral-50 to-white border-b border-neutral-200/50 px-6 py-5 flex items-center justify-between backdrop-blur-sm z-10">
+          <h2 id="modal-title" className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="text-neutral-400 hover:text-neutral-600 focus-ring rounded p-1"
+            className="text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 focus-ring rounded-lg p-2 transition-all duration-200 hover:rotate-90"
             aria-label="Close modal"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

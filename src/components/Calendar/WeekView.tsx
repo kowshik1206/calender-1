@@ -40,7 +40,7 @@ const WeekView = React.memo<WeekViewProps>(({
             e.stopPropagation();
             onEventClick(event);
           }}
-          className="absolute text-left px-2 py-1 rounded text-xs font-medium truncate hover:opacity-80 focus-ring transition-opacity z-10"
+          className="absolute text-left px-2 py-1 rounded-lg text-xs font-semibold truncate hover:opacity-95 hover:shadow-xl hover:scale-105 focus-ring transition-all duration-200 z-10 border border-white/20"
           style={{
             backgroundColor: event.color,
             color: '#fff',
@@ -62,10 +62,10 @@ const WeekView = React.memo<WeekViewProps>(({
   );
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-neutral-100">
       {/* Header with day names and dates */}
-      <div className="grid grid-cols-8 bg-neutral-100 border-b border-neutral-200 sticky top-0 z-20">
-        <div className="py-3 px-4 text-sm font-semibold text-neutral-700 border-r border-neutral-200">
+      <div className="grid grid-cols-8 bg-gradient-to-r from-primary-50 via-purple-50 to-pink-50 border-b border-neutral-200/50 sticky top-0 z-20 shadow-sm">
+        <div className="py-4 px-4 text-sm font-bold text-primary-900 border-r border-neutral-200/50">
           Time
         </div>
         {days.map((day) => (
@@ -78,9 +78,9 @@ const WeekView = React.memo<WeekViewProps>(({
             </div>
             <div
               className={clsx(
-                'text-lg font-bold mt-1',
+                'text-xl font-bold mt-1 transition-all duration-200',
                 day.isToday
-                  ? 'bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto'
+                  ? 'bg-gradient-to-br from-primary-600 to-purple-600 text-white rounded-full w-10 h-10 flex items-center justify-center mx-auto shadow-lg ring-2 ring-white ring-offset-2 ring-offset-primary-100 animate-pulse'
                   : 'text-neutral-900'
               )}
             >
@@ -117,8 +117,8 @@ const WeekView = React.memo<WeekViewProps>(({
                   key={`${day.date.toISOString()}-${slot.hour}-${slot.minute}`}
                   onClick={() => handleTimeSlotClick(day.date, slot.hour, slot.minute)}
                   className={clsx(
-                    'w-full h-[30px] border-b hover:bg-primary-50 focus-ring transition-colors text-left',
-                    slot.minute === 0 ? 'border-neutral-200' : 'border-neutral-100'
+                    'w-full h-[30px] border-b hover:bg-gradient-to-r hover:from-primary-50 hover:to-purple-50 focus-ring transition-all duration-200 text-left hover:shadow-inner',
+                    slot.minute === 0 ? 'border-neutral-200' : 'border-neutral-100/50'
                   )}
                   aria-label={`${formatDate(day.date, 'MMM d')} at ${slot.label}`}
                 />

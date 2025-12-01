@@ -22,11 +22,11 @@ const Select = React.memo<SelectProps>(({ options, label, error, className, ...p
       )}
       <select
         className={clsx(
-          'w-full px-3 py-2 border rounded-lg focus-ring transition-colors',
+          'w-full px-4 py-2.5 border-2 rounded-xl focus-ring transition-all duration-200 shadow-sm hover:shadow-md',
           error
-            ? 'border-red-300 focus:border-red-500'
-            : 'border-neutral-300 focus:border-primary-500',
-          'bg-white text-neutral-900',
+            ? 'border-red-300 focus:border-red-500 bg-red-50'
+            : 'border-neutral-200 focus:border-primary-500 hover:border-primary-300 bg-white',
+          'text-neutral-900 font-medium',
           className
         )}
         {...props}

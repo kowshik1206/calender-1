@@ -179,3 +179,6 @@ export function generateOverlappingEvents(): CalendarEvent[] {
     },
   ];
 }
+
+// Export a default set of sample events
+export const sampleEvents = generateSampleEvents(10, new Date());

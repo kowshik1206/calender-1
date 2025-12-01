@@ -56,13 +56,13 @@ const MonthView = React.memo<MonthViewProps>(({ days, onDateClick, onEventClick 
   );
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-neutral-100 transition-all duration-300 hover:shadow-3xl">
       {/* Header with day names */}
-      <div className="grid grid-cols-7 bg-neutral-100 border-b border-neutral-200">
+      <div className="grid grid-cols-7 bg-gradient-to-r from-primary-50 via-purple-50 to-pink-50 border-b border-neutral-200/50">
         {WEEK_DAYS.map((day) => (
           <div
             key={day}
-            className="py-3 text-center text-sm font-semibold text-neutral-700"
+            className="py-4 text-center text-sm font-bold text-primary-900 tracking-wide"
           >
             {day}
           </div>

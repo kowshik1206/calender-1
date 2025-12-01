@@ -113,7 +113,7 @@ const EventModal = React.memo<EventModalProps>(({
             type="text"
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus-ring"
+            className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus-ring focus:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-md font-medium"
             placeholder="Enter event title"
             autoFocus
           />
@@ -128,7 +128,7 @@ const EventModal = React.memo<EventModalProps>(({
             id="description"
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus-ring resize-none"
+            className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus-ring focus:border-primary-500 resize-none transition-all duration-200 shadow-sm hover:shadow-md font-medium"
             rows={3}
             placeholder="Add a description (optional)"
           />
@@ -146,7 +146,7 @@ const EventModal = React.memo<EventModalProps>(({
               onChange={(e) =>
                 setFormData({ ...formData, startDate: new Date(e.target.value) })
               }
-              className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus-ring"
+              className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus-ring focus:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-md font-medium"
             />
           </div>
 
@@ -161,7 +161,7 @@ const EventModal = React.memo<EventModalProps>(({
               onChange={(e) =>
                 setFormData({ ...formData, endDate: new Date(e.target.value) })
               }
-              className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus-ring"
+              className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus-ring focus:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-md font-medium"
             />
             {errors.endDate && <p className="mt-1 text-sm text-red-600">{errors.endDate}</p>}
           </div>
@@ -185,8 +185,8 @@ const EventModal = React.memo<EventModalProps>(({
                 type="button"
                 onClick={() => setFormData({ ...formData, color })}
                 className={clsx(
-                  'w-8 h-8 rounded-full focus-ring transition-transform',
-                  formData.color === color && 'ring-2 ring-offset-2 ring-neutral-400 scale-110'
+                  'w-10 h-10 rounded-full focus-ring transition-all duration-200 shadow-md hover:shadow-xl',
+                  formData.color === color && 'ring-4 ring-offset-2 ring-neutral-400 scale-125 shadow-2xl'
                 )}
                 style={{ backgroundColor: color }}
                 aria-label={`Select color ${color}`}

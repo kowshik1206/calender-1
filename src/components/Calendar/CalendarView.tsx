@@ -2,11 +2,16 @@ import React, { useState, useCallback, useMemo, lazy, Suspense } from 'react';
 import clsx from 'clsx';
 import { useCalendar } from '../../hooks/useCalendar';
 import { useEventManager } from '../../hooks/useEventManager';
+import { useEventFilter } from '../../hooks/useEventFilter';
+import { useEventDrag } from '../../hooks/useEventDrag';
 import MonthView from './MonthView';
 import WeekView from './WeekView';
+import EventStats from './EventStats';
+import FilterChips from './FilterChips';
 import Button from '../primitives/Button';
 import Select from '../primitives/Select';
-import type { CalendarEvent, EventFormData, ViewType } from './CalendarView.types';
+import SearchBar from '../primitives/SearchBar';
+import type { CalendarEvent, EventFormData, ViewType, EventCategory } from './CalendarView.types';
 import { getMonthName, getYear, createDateAtTime } from '../../utils/date.utils';
 
 // Lazy load EventModal for better performance
@@ -35,6 +40,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   } = useCalendar(initialDate);
 
   const { events, addEvent, updateEvent, deleteEvent, setEvents } = useEventManager();
+  const { searchQuery, setSearchQuery, activeFilter, setActiveFilter, filterEvents } = useEventFilter();
+  const { dragState, startDrag, endDrag, getDraggedEvent } = useEventDrag();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
@@ -47,19 +54,60 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     }
   }, [initialEvents, setEvents]);
 
-  const days = useMemo(() => getDays(events), [getDays, events]);
+  // Filter events based on search and filters
+  const filteredEvents = useMemo(() => filterEvents(events), [events, filterEvents]);
+
+  // Calculate event counts by category
+  const eventCounts = useMemo(() => {
+    const counts: Record<EventCategory | 'all', number> = {
+      all: events.length,
+      work: 0,
+      meeting: 0,
+      personal: 0,
+      reminder: 0,
+      other: 0,
+    };
+    events.forEach((event) => {
+      counts[event.category] = (counts[event.category] || 0) + 1;
+    });
+    return counts;
+  }, [events]);
+
+  const days = useMemo(() => getDays(filteredEvents), [getDays, filteredEvents]);
 
   const handleDateClick = useCallback((date: Date) => {
-    setSelectedDate(date);
-    setSelectedEvent(null);
-    setIsModalOpen(true);
-  }, []);
+    const draggedEvent = getDraggedEvent();
+    if (draggedEvent && dragState.isDragging) {
+      // Drop event on new date
+      const duration = new Date(draggedEvent.endDate).getTime() - new Date(draggedEvent.startDate).getTime();
+      const newStartDate = new Date(date);
+      newStartDate.setHours(new Date(draggedEvent.startDate).getHours());
+      newStartDate.setMinutes(new Date(draggedEvent.startDate).getMinutes());
+      const newEndDate = new Date(newStartDate.getTime() + duration);
+      
+      updateEvent(draggedEvent.id, {
+        ...draggedEvent,
+        startDate: newStartDate,
+        endDate: newEndDate,
+      });
+      endDrag();
+    } else {
+      setSelectedDate(date);
+      setSelectedEvent(null);
+      setIsModalOpen(true);
+    }
+  }, [dragState, getDraggedEvent, updateEvent, endDrag]);
 
-  const handleEventClick = useCallback((event: CalendarEvent) => {
-    setSelectedEvent(event);
-    setSelectedDate(undefined);
-    setIsModalOpen(true);
-  }, []);
+  const handleEventClick = useCallback((event: CalendarEvent, e?: React.MouseEvent) => {
+    if (e?.shiftKey) {
+      // Shift+click to start drag
+      startDrag(event);
+    } else {
+      setSelectedEvent(event);
+      setSelectedDate(undefined);
+      setIsModalOpen(true);
+    }
+  }, [startDrag]);
 
   const handleTimeSlotClick = useCallback((date: Date, hour: number, minute: number) => {
     const slotDate = createDateAtTime(date, hour, minute);
@@ -139,15 +187,39 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   );
 
   return (
-    <div className={clsx('calendar-view', className)} role="application" aria-label="Calendar">
+    <div className={clsx('calendar-view min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6', className)} role="application" aria-label="Calendar">
+      {/* Event Statistics */}
+      <div className="mb-6 animate-fadeIn">
+        <EventStats events={filteredEvents} currentDate={currentDate} />
+      </div>
+
+      {/* Search and Filters */}
+      <div className="mb-6 space-y-4 animate-fadeIn" style={{ animationDelay: '0.1s' }}>
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search events by title or description..."
+        />
+        <FilterChips
+          activeFilter={activeFilter}
+          onFilterChange={setActiveFilter}
+          eventCounts={eventCounts}
+        />
+      </div>
+
       {/* Header Controls */}
-      <div className="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+      <div className="mb-8 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 animate-slideUp">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-neutral-900">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
             {getMonthName(currentDate)} {getYear(currentDate)}
           </h1>
-          <Button onClick={navigateToday} variant="ghost" size="sm">
-            Today
+          <Button onClick={navigateToday} variant="ghost" size="sm" className="hover:bg-primary-50 hover:text-primary-700 transition-all duration-200">
+            <span className="flex items-center gap-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"/>
+              </svg>
+              Today
+            </span>
           </Button>
         </div>
 
@@ -195,14 +267,14 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           </div>
 
           {/* View Toggle */}
-          <div className="flex bg-neutral-100 rounded-lg p-1">
+          <div className="flex bg-gradient-to-r from-neutral-100 to-neutral-50 rounded-xl p-1 shadow-inner border border-neutral-200/50">
             <button
               onClick={() => handleViewSwitch('month')}
               className={clsx(
-                'px-4 py-1.5 rounded-md text-sm font-medium transition-colors focus-ring',
+                'px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 focus-ring',
                 viewType === 'month'
-                  ? 'bg-white text-neutral-900 shadow-sm'
-                  : 'text-neutral-600 hover:text-neutral-900'
+                  ? 'bg-white text-primary-700 shadow-md scale-105 font-semibold'
+                  : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/50'
               )}
               aria-pressed={viewType === 'month'}
             >
@@ -211,10 +283,10 @@ const CalendarView: React.FC<CalendarViewProps> = ({
             <button
               onClick={() => handleViewSwitch('week')}
               className={clsx(
-                'px-4 py-1.5 rounded-md text-sm font-medium transition-colors focus-ring',
+                'px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 focus-ring',
                 viewType === 'week'
-                  ? 'bg-white text-neutral-900 shadow-sm'
-                  : 'text-neutral-600 hover:text-neutral-900'
+                  ? 'bg-white text-primary-700 shadow-md scale-105 font-semibold'
+                  : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/50'
               )}
               aria-pressed={viewType === 'week'}
             >
@@ -223,6 +295,29 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Drag Indicator */}
+      {dragState.isDragging && (
+        <div className="mb-4 p-4 bg-primary-50 border-2 border-primary-300 border-dashed rounded-xl text-primary-700 font-medium text-center animate-pulse">
+          <span className="flex items-center justify-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+            </svg>
+            Moving "{dragState.draggedEvent?.title}" - Click a date to drop
+          </span>
+        </div>
+      )}
+
+      {/* No Results Message */}
+      {filteredEvents.length === 0 && (searchQuery || activeFilter !== 'all') && (
+        <div className="mb-6 p-8 bg-white rounded-2xl shadow-lg border border-neutral-200 text-center animate-fadeIn">
+          <svg className="w-16 h-16 mx-auto mb-4 text-neutral-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p className="text-xl font-semibold text-neutral-600 mb-2">No events found</p>
+          <p className="text-neutral-500">Try adjusting your search or filters</p>
+        </div>
+      )}
 
       {/* Calendar View */}
       {viewType === 'month' ? (
