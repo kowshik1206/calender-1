@@ -1,14 +1,13 @@
 import React, { useMemo } from 'react';
 import type { CalendarEvent } from './CalendarView.types';
-import { formatDate } from '../../utils/date.utils';
-import { formatEventDuration, getEventDuration } from '../../utils/event.utils';
+import { getEventDuration } from '../../utils/event.utils';
 
 interface EventStatsProps {
   events: CalendarEvent[];
-  currentDate: Date;
+  currentDate?: Date;
 }
 
-const EventStats: React.FC<EventStatsProps> = ({ events, currentDate }) => {
+const EventStats: React.FC<EventStatsProps> = ({ events }) => {
   const stats = useMemo(() => {
     const today = new Date();
     const todayEvents = events.filter((event) => {

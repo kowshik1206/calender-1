@@ -1,0 +1,151 @@
+/* Enhanced Dark Mode Styles */
+
+.dark {
+  color-scheme: dark;
+}
+
+/* Background gradients */
+.dark .calendar-view {
+  background: linear-gradient(to bottom right, #0f172a, #1e1b4b, #1e293b) !important;
+}
+
+.dark body {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+/* Cards and containers */
+.dark .bg-white {
+  background-color: #1f2937 !important;
+}
+
+.dark .bg-white\/80 {
+  background-color: rgba(31, 41, 55, 0.8) !important;
+}
+
+.dark .bg-neutral-50 {
+  background-color: #374151 !important;
+}
+
+.dark .bg-neutral-100 {
+  background-color: #4b5563 !important;
+}
+
+.dark .bg-neutral-200 {
+  background-color: #6b7280 !important;
+}
+
+/* Text colors */
+.dark .text-neutral-900 {
+  color: #f9fafb !important;
+}
+
+.dark .text-neutral-800 {
+  color: #e5e7eb !important;
+}
+
+.dark .text-neutral-700 {
+  color: #d1d5db !important;
+}
+
+.dark .text-neutral-600 {
+  color: #9ca3af !important;
+}
+
+.dark .text-neutral-500 {
+  color: #6b7280 !important;
+}
+
+.dark .text-neutral-400 {
+  color: #9ca3af !important;
+}
+
+/* Borders */
+.dark .border-neutral-200 {
+  border-color: #4b5563 !important;
+}
+
+.dark .border-neutral-300 {
+  border-color: #6b7280 !important;
+}
+
+.dark .border-white\/20 {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Hover states */
+.dark .hover\:bg-neutral-50:hover {
+  background-color: #374151 !important;
+}
+
+.dark .hover\:bg-neutral-100:hover {
+  background-color: #4b5563 !important;
+}
+
+.dark .hover\:border-neutral-300:hover {
+  border-color: #6b7280 !important;
+}
+
+/* Primary colors stay vibrant */
+.dark .bg-primary-50 {
+  background-color: rgba(14, 165, 233, 0.1) !important;
+}
+
+.dark .hover\:bg-primary-50:hover {
+  background-color: rgba(14, 165, 233, 0.15) !important;
+}
+
+/* Shadows enhanced for dark mode */
+.dark .shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark .shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5), 0 1px 2px -1px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark .shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.6) !important;
+}
+
+.dark .shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6) !important;
+}
+
+.dark .shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+}
+
+.dark .shadow-3xl {
+  box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Input fields */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border-color: #4b5563 !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Focus rings */
+.dark .focus-ring:focus-visible {
+  --tw-ring-color: rgb(59 130 246 / 0.5) !important;
+}
