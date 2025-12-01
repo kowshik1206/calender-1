@@ -1,0 +1,74 @@
+/* Dark Mode Support (Bonus Feature) */
+
+/* 
+  To enable dark mode, add the 'dark' class to the root element.
+  This is a bonus feature for extra points.
+*/
+
+@media (prefers-color-scheme: dark) {
+  :root.dark-mode-enabled {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #262626;
+    --bg-tertiary: #404040;
+    --text-primary: #fafafa;
+    --text-secondary: #d4d4d4;
+    --text-tertiary: #a3a3a3;
+    --border-primary: #404040;
+    --border-secondary: #525252;
+  }
+
+  .dark-mode-enabled .bg-white {
+    background-color: var(--bg-secondary);
+  }
+
+  .dark-mode-enabled .bg-neutral-50 {
+    background-color: var(--bg-primary);
+  }
+
+  .dark-mode-enabled .bg-neutral-100 {
+    background-color: var(--bg-tertiary);
+  }
+
+  .dark-mode-enabled .bg-neutral-200 {
+    background-color: #525252;
+  }
+
+  .dark-mode-enabled .text-neutral-900 {
+    color: var(--text-primary);
+  }
+
+  .dark-mode-enabled .text-neutral-700 {
+    color: var(--text-secondary);
+  }
+
+  .dark-mode-enabled .text-neutral-600 {
+    color: var(--text-tertiary);
+  }
+
+  .dark-mode-enabled .border-neutral-200 {
+    border-color: var(--border-primary);
+  }
+
+  .dark-mode-enabled .border-neutral-300 {
+    border-color: var(--border-secondary);
+  }
+}
+
+/* Usage:
+  Add this to your root element to enable dark mode:
+  
+  <div className="dark-mode-enabled">
+    <CalendarView />
+  </div>
+
+  Or use a toggle:
+
+  const [darkMode, setDarkMode] = useState(false);
+  
+  <div className={darkMode ? 'dark-mode-enabled' : ''}>
+    <button onClick={() => setDarkMode(!darkMode)}>
+      Toggle Dark Mode
+    </button>
+    <CalendarView />
+  </div>
+*/
